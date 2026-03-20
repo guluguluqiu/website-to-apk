@@ -802,6 +802,14 @@ public class MainActivity extends AppCompatActivity {
         // Handle SSL issue
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+            String failingUrl = error.getUrl();
+            String currentUrl = view.getUrl();
+            boolean isMainPage = (currentUrl != null && failingUrl != null && failingUrl.equals(currentUrl));
+            if (!isMainPage) {
+                handler.cancel();
+                return;
+            }
+
             final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setMessage(R.string.notification_error_ssl_cert_invalid);
 
